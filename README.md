@@ -40,15 +40,99 @@ To run this plugin successfully, you must have:
 
 - **Grafana** version 10.0+
 - **Zabbix Plugin for Grafana** (Alexander Zobnin's app) installed and configured as a Data Source.
+- **Allowed usigned plugin installation**: Ensure your Grafana instance permits custom plugins, uncommenting `allow_loading_unsigned_plugins` and adding `gabrielnsw-noctopology-panel` in `grafana.ini` if necessary.
+
+## Installation
+
+### Using the Grafana CLI (Recommended)
+
+```bash
+sudo grafana cli \
+    --homepath /usr/share/grafana \
+    --pluginUrl https://github.com/gabrielnsw/network-topology-plugin/releases/download/v1.0.13-alpha/gabrielnsw-noctopology-panel-1.0.13-alpha.zip \
+    plugins install gabrielnsw-noctopology-panel
+
+# Restart Grafana to load the new plugin
+sudo systemctl restart grafana-server
+```
+
+Or, your custom url for the plugin zip file previously downloaded:
+
+```bash
+sudo grafana cli \
+    --homepath /usr/share/grafana \
+    --pluginUrl <https://your-custom-plugin-url.com/plugin.zip>\
+    plugins install gabrielnsw-noctopology-panel
+
+# Restart Grafana to load the new plugin
+sudo systemctl restart grafana-server
+```
+
+---
+
+### Manual Installation
+
+- Download the latest release from our [GitHub releases page](https://github.com/gabrielnsw/network-topology-plugin/releases/tag/v1.0.13-alpha).
+- Unzip the downloaded file and place the extracted folder into your Grafana plugins directory normally in `/var/lib/grafana/plugins/` or wherever custom plugins reside in your Grafana server.
+- Restart the Grafana server to load the new plugin:
+
+```bash
+sudo systemctl restart grafana-server
+```
+
+---
+
+### Docker Installation
+
+#### Using docker run command with environment variables:
+
+```bash
+docker run -d -p 3000:3000 --name=grafana \
+  -e "GF_PLUGINS_PREINSTALL=custom-plugin@@https://github.com/gabrielnsw/network-topology-plugin/releases/download/v1.0.13-alpha/gabrielnsw-noctopology-panel-1.0.13-alpha.zip " \
+  -e "GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=gabrielnsw-noctopology-panel" \
+  grafana/grafana
+```
+
+#### Or using docker compose:
+
+- Create create a docker-compose.yaml with the following content:
+
+```yaml
+services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    restart: unless-stopped
+    environment:
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=gabrielnsw-noctopology-panel
+      - 'GF_PLUGINS_PREINSTALL=custom-plugin@@https://github.com/gabrielnsw/network-topology-plugin/releases/download/v1.0.13-alpha/gabrielnsw-noctopology-panel-1.0.13-alpha.zip '
+    ports:
+        - '3000:3000'
+    volumes:
+      - 'grafana_storage:/var/lib/grafana'
+volumes:
+  grafana_storage: {}
+```
+
+- Run the validation command to ensure your `docker-compose.yaml` is correctly configured:
+
+```bash
+docker compose config
+```
+
+- Run docker compose to start the Grafana container:
+
+```bash
+docker compose up -d
+```
 
 ## Getting Started
 
-1. Place the generated content strictly into your `/var/lib/grafana/plugins/` directory (or wherever custom plugins reside in your cluster), and restart the Grafana engine.
-2. Open or create a dashboard and insert the **Network Topology** panel.
-3. In the query section, define standard triggers targeting the Zabbix Data Source.
-4. Fetch historical items you require (e.g., `net.if.in`, `net.if.out`, `icmpping`) using the **Metrics** query mode.
-5. Open the visual configuration interface on the panel. Start inserting your devices mapping against active hosts found in DataFrames, and connect their tracked interfaces via links.
-6. Simply save your Grafana dashboard locally. The plugin natively commits mapped topology JSON definitions securely over Grafana options data.
+1. Open or create a dashboard and insert the **Network Topology** panel.
+2. In the query section, define standard triggers targeting the Zabbix Data Source.
+3. Fetch historical items you require (e.g., `net.if.in`, `net.if.out`, `icmpping`) using the **Metrics** query mode.
+4. Open the visual configuration interface on the panel. Start inserting your devices mapping against active hosts found in DataFrames, and connect their tracked interfaces via links.
+5. Simply save your Grafana dashboard locally. The plugin natively commits mapped topology JSON definitions securely over Grafana options data.
 
 ## Documentation
 

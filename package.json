@@ -68,9 +68,9 @@
   },
   "dependencies": {
     "@emotion/css": "11.10.6",
-    "@grafana/data": "^12.3.2",
-    "@grafana/i18n": "^12.3.2",
-    "@grafana/runtime": "^12.3.2",
+    "@grafana/data": "^12.4.0",
+    "@grafana/i18n": "^12.4.0",
+    "@grafana/runtime": "^12.4.0",
     "@grafana/schema": "^12.3.2",
     "@grafana/ui": "^12.3.2",
     "cytoscape": "^3.33.1",

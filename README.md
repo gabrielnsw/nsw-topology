@@ -64,12 +64,16 @@ Hover a link to see traffic, metrics, and a sparkline of recent history.
 
 ![Connection info](src/img/connection_info.png)
 
+- **Allowed unsigned plugin installation**: Ensure your Grafana instance permits custom plugins, uncommenting `allow_loading_unsigned_plugins` and adding `gabrielnsw-nswtopology-panel` in `grafana.ini` if necessary.
+
 ## Installation
 
-### Grafana CLI
+> 💡 **Installation docs contributed by [@marcelobaptista](https://github.com/marcelobaptista)**
+
+### Grafana Catalog
 
 > ⏳ **Coming soon** — not submitted to the Grafana catalog yet.\
-> Use manual install or Docker for now.
+> Use the alternative methods below.
 
 ```bash
 # Once available:
@@ -77,15 +81,42 @@ grafana cli plugins install gabrielnsw-nswtopology-panel
 sudo systemctl restart grafana-server
 ```
 
-### Manual
+### Using the Grafana CLI (Recommended)
 
-1. Grab the latest release from [GitHub Releases](https://github.com/gabrielnsw/nsw-topology/releases)
-2. Extract to your Grafana plugins folder (`/var/lib/grafana/plugins/`)
-3. Restart Grafana
+```bash
+sudo grafana cli \
+  --homepath /usr/share/grafana \
+  --pluginUrl https://github.com/gabrielnsw/nsw-topology/releases/download/v2.0.1-beta/gabrielnsw-nswtopology-panel-2.0.1-beta.zip \
+  plugins install gabrielnsw-nswtopology-panel
+
+# Restart Grafana to load the new plugin
+sudo systemctl restart grafana-server
+```
+
+Or, your custom url for the plugin zip file previously downloaded:
+
+```bash
+sudo grafana cli \
+  --homepath /usr/share/grafana \
+  --pluginUrl <https://your-custom-plugin-url.com/plugin.zip>\
+  plugins install gabrielnsw-nswtopology-panel
+
+# Restart Grafana to load the new plugin
+sudo systemctl restart grafana-server
+```
+
+### Manual Installation
+
+- Download the latest release from our [GitHub releases page](https://github.com/gabrielnsw/nsw-topology/releases).
+- Unzip the downloaded file and place the extracted folder into your Grafana plugins directory normally in `/var/lib/grafana/plugins/`
+  or wherever custom plugins reside in your Grafana server.
+- Restart the Grafana server to load the new plugin:
+
+```bash
+sudo systemctl restart grafana-server
+```
 
 ### Docker
-
-> Docker docs by [@marcelobaptista](https://github.com/marcelobaptista)
 
 #### With `docker run`:
 
@@ -164,4 +195,4 @@ npm run build  # production
 
 ## Thanks
 
-- [@marcelobaptista](https://github.com/marcelobaptista) — Docker installation docs
+- [@marcelobaptista](https://github.com/marcelobaptista) — Installation docs
